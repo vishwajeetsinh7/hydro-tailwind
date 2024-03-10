@@ -728,12 +728,12 @@ label.subscribe-and-save input[type="radio"]:checked + div  ul li svg {
   padding: 1rem;
 }
 
-.custom-collection  main { 
+/* .custom-collection  main { 
   margin-top: 1rem;
   display: grid;
   grid-template-columns: 8fr 4fr;
   gap: 1rem;
-}
+} */
 
 .custom-collection  .custom-cart { 
   border: 1px solid black;
@@ -796,3 +796,12 @@ label.subscribe-and-save input[type="radio"]:checked + div  ul li svg {
   padding-block: 0;
   font-weight: bold;
 }
+
+.custom-section-wrapper { 
+  grid-template-columns: auto auto;
+  gap: 1rem;
+}
+.review_div {
+  display: flex;
+}
+

@@ -1,414 +1,210 @@
-import React from 'react'
-import {Suspense} from 'react';
-import {Await} from '@remix-run/react';
-import {
-    Money,
-    VariantSelector,
-    getSelectedProductOptions,
-    CartForm,
-  } from '@shopify/hydrogen';
-import {defer, redirect} from '@shopify/remix-oxygen';
-import {useLoaderData, Link} from '@remix-run/react';
-import {json} from '@shopify/remix-oxygen';
-import {Pagination, getPaginationVariables, Image} from '@shopify/hydrogen';
+import { CartForm, Image, Pagination, VariantSelector, getPaginationVariables, getSelectedProductOptions } from '@shopify/hydrogen'
+import React, { Suspense } from 'react'
+import {  CartProvider, useCart, ProductProvider } from '@shopify/hydrogen-react'
+import { defer, json, redirect } from '@remix-run/server-runtime'
+import { Await, Link, useLoaderData } from '@remix-run/react'
 
-import {AddToCartButton} from '@shopify/hydrogen-react';
 
-const CustomCollection = () => {
-    const collections = customcollectiondata
-    
-  return (
-    <div className='custom-collection'>
-          <div className="number-wrapper">
-            <span className="number">2</span>
-          </div>
-          <div className='custom-collection-wrapper'>
-            <h1 className="underline-text text-red-500">SELECT YOUR MEATS</h1>
-            <main className="main-section">
-                    <CollectionsGrid collections={collections}/>
-                <div className='custom-cart'>
-                    <div className="title">
-                        <h3 className="title">Subscribers Save 25% on Orders</h3>
-                        <p className="desc">Applied at checkout</p>
+
+
+
+
+const CustomCollection = ({ col }) => {
+    const { nodes } = col
+    console.log(nodes[0])
+    return (
+        <section className='max-w-7xl '>
+            <div className="custom-section-wrapper grid ">
+                <div className="number-wrapper grow-1" >2</div>
+                <main className='main-section flex gap-2'>
+                    <h2 className="title">Select Your Meats</h2>
+                    <div className='product-and-cart flex'>
+                        <div className="product-grid grid grid-cols-3">
+                            {nodes.map((product, key) => (
+                                <ProductCard product={product} key={key} />
+                            ))}
+                        </div>
+                        <div className="cart-wrapper">
+                            cart wrapper
+                        </div>
                     </div>
+                </main>
 
-
-                </div>
-            </main>
-          </div>
-        
-    </div>
-  )
+            </div>
+        </section>
+    )
 }
 
-export default CustomCollection
 
+function ProductCard({ product }) {
+    const image = product.featuredImage.url
+    const variantId = "8249959383266"
+    const selectedVariant = product.variants.nodes[0]
 
+    return (
+        <div className='product-grid'>
+            <div className="img-wrapper">
+                <img
+                    className='object-contain w-full'
+                    width="100%"
+                    alt={product.title}
+                    src={image}
+                    loading="lazy"
+                />
+            </div>
+            <div className="price">
+                <span>$ {product.priceRange.minVariantPrice.amount}</span>
+            </div>
+            <div className="cart">
+            <Suspense
+                    fallback={
+                    <ProductForm
+                        product={product}
+                        selectedVariant={selectedVariant}
+                        variants={[]}
+                    />
+                    }
+                >
+                    <Await
+                    errorElement="There was a problem loading product variants"
+                    resolve={product}
+                    >
+                    {(data) => (
+                        <ProductForm
+                        product={product}
+                        selectedVariant={selectedVariant}
+                        variants={product?.variants.nodes || []}
+                        />
+                    )}
+                    </Await>
+                </Suspense>
 
-const customcollectiondata = [
-    {
-        "id": "gid://shopify/Product/8249959383266",
-        "handle": "smoked-texas-brisket",
-        "title": "Smoked Texas Brisket",
-        "featuredImage": {
-            "id": "gid://shopify/ProductImage/40035512615138",
-            "altText": null,
-            "url": "https://cdn.shopify.com/s/files/1/0672/4776/7778/files/smoked-texas-brisket-409355.png?v=1702931384",
-            "width": 1350,
-            "height": 2048
-        },
-        "priceRange": {
-            "minVariantPrice": {
-                "amount": "22.95",
-                "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-                "amount": "22.95",
-                "currencyCode": "USD"
-            }
-        },
-        "variants": {
-            "nodes": [
-                {
-                    "selectedOptions": [
-                        {
-                            "name": "Title",
-                            "value": "Default Title"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "id": "gid://shopify/Product/8249959448802",
-        "handle": "herb-roasted-chicken-breast",
-        "title": "Herb Roasted Chicken Breast",
-        "featuredImage": {
-            "id": "gid://shopify/ProductImage/40035511566562",
-            "altText": null,
-            "url": "https://cdn.shopify.com/s/files/1/0672/4776/7778/files/herb-roasted-chicken-breast-710882.png?v=1702931383",
-            "width": 1350,
-            "height": 2048
-        },
-        "priceRange": {
-            "minVariantPrice": {
-                "amount": "11.45",
-                "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-                "amount": "11.45",
-                "currencyCode": "USD"
-            }
-        },
-        "variants": {
-            "nodes": [
-                {
-                    "selectedOptions": [
-                        {
-                            "name": "Title",
-                            "value": "Default Title"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "id": "gid://shopify/Product/8249959874786",
-        "handle": "pollo-asado",
-        "title": "Pollo Asado",
-        "featuredImage": {
-            "id": "gid://shopify/ProductImage/40035511435490",
-            "altText": null,
-            "url": "https://cdn.shopify.com/s/files/1/0672/4776/7778/files/pollo-asado-489849.png?v=1702931383",
-            "width": 488,
-            "height": 741
-        },
-        "priceRange": {
-            "minVariantPrice": {
-                "amount": "11.45",
-                "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-                "amount": "11.45",
-                "currencyCode": "USD"
-            }
-        },
-        "variants": {
-            "nodes": [
-                {
-                    "selectedOptions": [
-                        {
-                            "name": "Title",
-                            "value": "Default Title"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "id": "gid://shopify/Product/8249959219426",
-        "handle": "sweet-chili-thai-chicken",
-        "title": "Sweet Chili Thai Chicken",
-        "featuredImage": {
-            "id": "gid://shopify/ProductImage/40035512975586",
-            "altText": null,
-            "url": "https://cdn.shopify.com/s/files/1/0672/4776/7778/files/sweet-chili-thai-chicken-892316.png?v=1702931384",
-            "width": 1350,
-            "height": 2048
-        },
-        "priceRange": {
-            "minVariantPrice": {
-                "amount": "11.45",
-                "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-                "amount": "11.45",
-                "currencyCode": "USD"
-            }
-        },
-        "variants": {
-            "nodes": [
-                {
-                    "selectedOptions": [
-                        {
-                            "name": "Title",
-                            "value": "Default Title"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "id": "gid://shopify/Product/8249959678178",
-        "handle": "slow-cooked-pulled-pork",
-        "title": "Slow Cooked Pulled Pork",
-        "featuredImage": {
-            "id": "gid://shopify/ProductImage/40035513041122",
-            "altText": null,
-            "url": "https://cdn.shopify.com/s/files/1/0672/4776/7778/files/slow-cooked-pulled-pork-286028.png?v=1702931384",
-            "width": 1351,
-            "height": 2048
-        },
-        "priceRange": {
-            "minVariantPrice": {
-                "amount": "13.45",
-                "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-                "amount": "13.45",
-                "currencyCode": "USD"
-            }
-        },
-        "variants": {
-            "nodes": [
-                {
-                    "selectedOptions": [
-                        {
-                            "name": "Title",
-                            "value": "Default Title"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "id": "gid://shopify/Product/8249959186658",
-        "handle": "chimichurri-steak",
-        "title": "Chimichurri Steak",
-        "featuredImage": {
-            "id": "gid://shopify/ProductImage/40035515236578",
-            "altText": null,
-            "url": "https://cdn.shopify.com/s/files/1/0672/4776/7778/files/chimichurri-steak-991376.png?v=1702931392",
-            "width": 1350,
-            "height": 2048
-        },
-        "priceRange": {
-            "minVariantPrice": {
-                "amount": "19.95",
-                "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-                "amount": "19.95",
-                "currencyCode": "USD"
-            }
-        },
-        "variants": {
-            "nodes": [
-                {
-                    "selectedOptions": [
-                        {
-                            "name": "Title",
-                            "value": "Default Title"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "id": "gid://shopify/Product/8249959022818",
-        "handle": "carne-asada",
-        "title": "Carne Asada",
-        "featuredImage": {
-            "id": "gid://shopify/ProductImage/40035512582370",
-            "altText": null,
-            "url": "https://cdn.shopify.com/s/files/1/0672/4776/7778/files/carne-asada-330625.png?v=1702931384",
-            "width": 487,
-            "height": 729
-        },
-        "priceRange": {
-            "minVariantPrice": {
-                "amount": "19.95",
-                "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-                "amount": "19.95",
-                "currencyCode": "USD"
-            }
-        },
-        "variants": {
-            "nodes": [
-                {
-                    "selectedOptions": [
-                        {
-                            "name": "Title",
-                            "value": "Default Title"
-                        }
-                    ]
-                }
-            ]
-        }
-    },
-    {
-        "id": "gid://shopify/Product/8249959121122",
-        "handle": "buffalo-chicken-breast",
-        "title": "Buffalo Chicken Breast",
-        "featuredImage": {
-            "id": "gid://shopify/ProductImage/40035512451298",
-            "altText": null,
-            "url": "https://cdn.shopify.com/s/files/1/0672/4776/7778/files/buffalo-chicken-breast-446440.png?v=1702931384",
-            "width": 1347,
-            "height": 2048
-        },
-        "priceRange": {
-            "minVariantPrice": {
-                "amount": "11.45",
-                "currencyCode": "USD"
-            },
-            "maxVariantPrice": {
-                "amount": "11.45",
-                "currencyCode": "USD"
-            }
-        },
-        "variants": {
-            "nodes": [
-                {
-                    "selectedOptions": [
-                        {
-                            "name": "Title",
-                            "value": "Default Title"
-                        }
-                    ]
-                }
-            ]
-        }
-    }
-]
-
-
+            </div>
+        </div>
+    )
+}
 
 
 
 
 /**
- * @param {{collections: CollectionFragment[]}}
- */
-function CollectionsGrid({collections}) {
-    return (
-      <div className="collections-grid">
-        {collections.map((collection, index) => (
-          <CollectionItem
-            key={collection.id}
-            collection={collection}
-            index={index}
-          />
-        ))}
-      </div>
-    );
-  }
-  
-  /**
-   * @param {{
-   *   collection: CollectionFragment;
-   *   index: number;
-   * }}
-   */
-  function CollectionItem({collection, index}) {
-    // console.log(collection, 'item')
-
-    const productAnalytics = {
-        productGid: collection.id,
-        variantGid: collection.id,
-        name: collection.title,
-        variantName: collection.title,
-        brand: collection.vendor,
-        price: 12,
-        quantity: 1,
-      };
-    
-    return (
-      <Link
-        className="collection-item"
-        key={collection.id}
-        to={`/collections/${collection.handle}`}
-        prefetch="intent"
+ * @param {{
+*   product: ProductFragment;
+*   selectedVariant: ProductFragment['selectedVariant'];
+*   variants: Array<ProductVariantFragment>;
+* }}
+*/
+export function ProductForm({product, selectedVariant, variants}) {
+  return (
+    <div className="product-form">
+      <VariantSelector
+        handle={product.handle}
+        options={product.options}
+        variants={variants}
       >
-        {collection?.featuredImage && (
-          <Image
-            alt={collection.featuredImage.altText || collection.title}
-            aspectRatio="1/1"
-            data={collection.featuredImage}
-            loading={index < 3 ? 'eager' : undefined}
-          />
-        )}
-        <h5 className="price">${collection.priceRange.maxVariantPrice.amount}</h5>
-{/* 
-        <div className='custom-form'>
-            <AddToCartButton
-              lines={[
+        {({option}) => <ProductOptions key={option.name} option={option} />}
+      </VariantSelector>
+      <br />
+      <AddToCartButton
+        // disabled={!selectedVariant || !selectedVariant.availableForSale}
+        onClick={() => {
+          window.location.href = window.location.href + '#cart-aside';
+        }}
+        lines={
+          selectedVariant
+            ? [
                 {
+                  merchandiseId: selectedVariant.id,
                   quantity: 1,
-                  merchandiseId: collection.id,
                 },
-              ]}
-              variant="secondary"
-              className="mt-1 [background:linear-gradient(270deg,rgb(239,130,80)_0%,rgb(237.22,106.86,97.8)_30.5%,rgb(237,104,100)_64%,rgb(239,130,81)_100%)] w-full font-roman transition-all relative p-2 rounded-[62px] overflow-hidden text-white hover:opacity-90 uppercase"
-              analytics={{
-                products: [productAnalytics],
-                totalValue: parseFloat(productAnalytics.price),
+              ]
+            : []
+        }
+      >
+        {selectedVariant?.availableForSale ? 'Add to cart' : 'ADD TO CART'}
+      </AddToCartButton>
+    </div>
+  );
+}
+
+/**
+* @param {{option: VariantOption}}
+*/
+function ProductOptions({option}) {
+  return (
+    <div className="product-options" key={option.name}>
+      <h5>{option.name}</h5>
+      <div className="product-options-grid">
+        {option.values.map(({value, isAvailable, isActive, to}) => {
+          return (
+            <Link
+              className="product-options-item"
+              key={option.name + value}
+              prefetch="intent"
+              preventScrollReset
+              replace
+              to={to}
+              style={{
+                border: isActive ? '1px solid black' : '1px solid transparent',
+                opacity: isAvailable ? 1 : 0.3,
               }}
             >
-              {' '}
-              Add to Cart
-            </AddToCartButton>
-        </div> */}
+              {value}
+            </Link>
+          );
+        })}
+      </div>
+      <br />
+    </div>
+  );
+}
 
-        <div className='custom-form'>
-            <button>
-                <span className="plus-icon">+</span>
-                <span>ADD</span>
-                
-            </button>
-            
-        </div>
-      </Link>
-    );
-  }
+/**
+* @param {{
+*   analytics?: unknown;
+*   children: React.ReactNode;
+*   disabled?: boolean;
+*   lines: CartLineInput[];
+*   onClick?: () => void;
+* }}
+*/
+function AddToCartButton({analytics, children, disabled, lines, onClick}) {
+  return (
+    <CartForm route="/cart" inputs={{lines}} action={CartForm.ACTIONS.LinesAdd}>
+      {(fetcher) => (
+        <>
+          <input
+            name="analytics"
+            type="hidden"
+            value={JSON.stringify(analytics)}
+          />
+          <button
+            type="submit"
+            onClick={onClick}
+            disabled={disabled ?? fetcher.state !== 'idle'}
+          >
+            {children}
+          </button>
+        </>
+      )}
+    </CartForm>
+  );
+}
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export default CustomCollection
