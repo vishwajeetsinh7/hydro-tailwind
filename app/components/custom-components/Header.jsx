@@ -9,7 +9,7 @@ const CustomHeader = () => {
     <header className='custom-header'>
         <div className="nav">
             <Link to="/">
-            <svg width="30px" height="30px" xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 m-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
+            <svg width="30px" height="30px" xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 m-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7"></path></svg>
             </Link>
             <div className='logo-wrapper'>
                 <Link to="/">

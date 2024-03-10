@@ -56,7 +56,7 @@ const PlanPicker = () => {
         <div className="subscribe-box">
             <fieldset>
             <label htmlFor="ss" className='subscribe-and-save'>
-                <input id='ss' checked="checked" type="radio" name='sub' />
+                <input id='ss'  type="radio" name='sub' />
                 <div className="subscribe-and-save">
                     <div className="top-section">
                         <div className="title">Subscribe & Save</div>

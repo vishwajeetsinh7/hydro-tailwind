@@ -349,7 +349,7 @@ function CollectionsGrid({collections}) {
    * }}
    */
   function CollectionItem({collection, index}) {
-    console.log(collection, 'item')
+    // console.log(collection, 'item')
 
     const productAnalytics = {
         productGid: collection.id,
@@ -376,7 +376,7 @@ function CollectionsGrid({collections}) {
             loading={index < 3 ? 'eager' : undefined}
           />
         )}
-        <h5 class="price">${collection.priceRange.maxVariantPrice.amount}</h5>
+        <h5 className="price">${collection.priceRange.maxVariantPrice.amount}</h5>
 {/* 
         <div className='custom-form'>
             <AddToCartButton
