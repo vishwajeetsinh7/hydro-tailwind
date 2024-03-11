@@ -3,6 +3,7 @@ import React, { Suspense } from 'react'
 import {  CartProvider, useCart, ProductProvider } from '@shopify/hydrogen-react'
 import { defer, json, redirect } from '@remix-run/server-runtime'
 import { Await, Link, useLoaderData } from '@remix-run/react'
+import Cart from '~/routes/($locale).cart'
 
 
 
@@ -25,7 +26,7 @@ const CustomCollection = ({ col }) => {
                             ))}
                         </div>
                         <div className="cart-wrapper">
-                            cart wrapper
+                           <Cart/>
                         </div>
                     </div>
                 </main>
