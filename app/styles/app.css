@@ -805,3 +805,8 @@ label.subscribe-and-save input[type="radio"]:checked + div  ul li svg {
   display: flex;
 }
 
+.benifits-slider .dot-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

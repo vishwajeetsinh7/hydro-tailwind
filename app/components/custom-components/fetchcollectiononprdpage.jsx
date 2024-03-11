@@ -63,7 +63,7 @@ export async function loader({request, params, context}) {
 export default function Product() {
 
   const data = useLoaderData()
-  console.log(data)
+  // console.log(data)
 
   return (
     <>

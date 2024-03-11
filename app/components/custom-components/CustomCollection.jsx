@@ -4,6 +4,17 @@ import {  CartProvider, useCart, ProductProvider } from '@shopify/hydrogen-react
 import { defer, json, redirect } from '@remix-run/server-runtime'
 import { Await, Link, useLoaderData } from '@remix-run/react'
 import Cart from '~/routes/($locale).cart'
+import { Badge } from '../ui/badge'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog"
+import ProductModal from '../ui/ProductModal'
 
 
 
@@ -12,7 +23,7 @@ import Cart from '~/routes/($locale).cart'
 
 const CustomCollection = ({ col }) => {
     const { nodes } = col
-    console.log(nodes[0])
+    // console.log(nodes[0])
     return (
         <section className='max-w-7xl '>
             <div className="custom-section-wrapper grid ">
@@ -40,12 +51,33 @@ const CustomCollection = ({ col }) => {
 function ProductCard({ product }) {
     const image = product.featuredImage.url
     const variantId = "8249959383266"
+    const product2 = product
+    const productHandle = product.handle
     const selectedVariant = product.variants.nodes[0]
+
+    function openModal ( ) { 
+      const dialog = document.querySelector(`#${productHandle}`)
+      dialog.showModal()
+    }
+
+    function closeModal () { 
+      const dialogClose = document.querySelector(`#${productHandle}`)
+      dialogClose.close()
+    }
 
     return (
         <div className='product-grid'>
+          <dialog id={productHandle}>
+            <button
+            onClick={() => closeModal()}
+             className='close-modal'>
+              ❌
+            </button>
+            <ProductModal product={product2}/>
+          </dialog>
             <div className="img-wrapper">
                 <img
+                onClick={() => openModal()}
                     className='object-contain w-full'
                     width="100%"
                     alt={product.title}
