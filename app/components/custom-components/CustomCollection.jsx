@@ -15,7 +15,8 @@ import {
   DialogTrigger,
 } from "../ui/dialog"
 import ProductModal from '../ui/ProductModal'
-
+import {Button} from '../ui/button'
+import CustomProgressBar from '../ui/CustomProgressBar'
 
 
 
@@ -25,19 +26,36 @@ const CustomCollection = ({ col }) => {
     const { nodes } = col
     // console.log(nodes[0])
     return (
-        <section className='max-w-7xl '>
-            <div className="custom-section-wrapper grid ">
-                <div className="number-wrapper grow-1" >2</div>
-                <main className='main-section flex gap-2'>
-                    <h2 className="title">Select Your Meats</h2>
+        <section className='max-w-full '>
+            <div className="custom-section-wrapper grid  pl-10">
+                <div className="number-wrapper"><span className="number">2</span></div>
+
+                <main className='main-section flex gap-2 flex-col  border border-gray-400 border-solid'>
+                  <div className='select-your-meat'>
+                  <h2 className="title font-roboto_bold text-[22px] text-[#1d1d1d] uppercase  ">Select Your Meats</h2>
+                  </div>
                     <div className='product-and-cart flex'>
-                        <div className="product-grid grid grid-cols-3">
+                        <div className="product-grid grid grid-cols-3 gap-x-5 p-3 ">
                             {nodes.map((product, key) => (
                                 <ProductCard product={product} key={key} />
                             ))}
                         </div>
-                        <div className="cart-wrapper">
+                        <div className="cart-wrapper sticky top-0 max-h-[600px]">
+                          <div>
+                            <div className="top-section py-5 bg-black text-white text-center">
+                              <div className="text-wrapper py-5">
+                                <h1 className='font-roboto_medium text-[17px] leading-none'>Subscribers Save 25% on Orders</h1>
+                                <p className='text-[14px] leading-none font-roboto_medium mt-3'>Applied at checkout</p>
+                              </div>
+                            </div>
+                            <div className="progress-bar">
+                              <CustomProgressBar/>
+                            </div>
+                            <div className="free-item">
+                              <img src="https://cdn.shopify.com/s/files/1/0555/1751/1961/files/Ranch_Rub_Chicken_Breast_Free.png" alt="cart free" />
+                            </div>
                            <Cart/>
+                          </div>
                         </div>
                     </div>
                 </main>
@@ -67,13 +85,15 @@ function ProductCard({ product }) {
 
     return (
         <div className='product-grid'>
-          <dialog id={productHandle}>
-            <button
-            onClick={() => closeModal()}
-             className='close-modal'>
-              ❌
-            </button>
-            <ProductModal product={product2}/>
+          <dialog className='bg-[#edeaea] custom-dialog' id={productHandle}>
+            <div className="close-panel text-right p-5">
+              <button
+              onClick={() => closeModal()}
+              className='close-modal'>
+                      <svg width={18} height={18} viewBox="0 0 18 18"  xmlns="http://www.w3.org/2000/svg"><path d="M17 1L1 17" stroke="black" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /><path d="M1 1L17 17" stroke="black" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+            </div>
+            <ProductModal product={product2} key={Math.random()}/>
           </dialog>
             <div className="img-wrapper">
                 <img
@@ -85,10 +105,12 @@ function ProductCard({ product }) {
                     loading="lazy"
                 />
             </div>
-            <div className="price">
-                <span>$ {product.priceRange.minVariantPrice.amount}</span>
+            <div className="price text-center pt-6">
+                <span className='text-2xl font-bold font-roboto_bold p-6'>$ {product.priceRange.minVariantPrice.amount}</span>
             </div>
-            <div className="cart">
+            <div className='mx-auto text-center my-5'>
+      
+            <div className="cart custom-add-to-cart ">
             <Suspense
                     fallback={
                     <ProductForm
@@ -110,9 +132,11 @@ function ProductCard({ product }) {
                         />
                     )}
                     </Await>
-                </Suspense>
+            </Suspense>
 
             </div>
+            </div>
+
         </div>
     )
 }
@@ -139,6 +163,7 @@ export function ProductForm({product, selectedVariant, variants}) {
       </VariantSelector>
       <br />
       <AddToCartButton
+      
         // disabled={!selectedVariant || !selectedVariant.availableForSale}
         onClick={() => {
           window.location.href = window.location.href + '#cart-aside';
@@ -154,7 +179,10 @@ export function ProductForm({product, selectedVariant, variants}) {
             : []
         }
       >
-        {selectedVariant?.availableForSale ? 'Add to cart' : 'ADD TO CART'}
+        <div className="bg-[#862e1b] flex justify-center py-[10px] px-[20px] leading-none font-bold text-white">
+        <span className='plus-icon'>+</span>
+        {selectedVariant?.availableForSale ? 'Add to cart' : 'ADD'}
+        </div>
       </AddToCartButton>
     </div>
   );

@@ -14,9 +14,13 @@ module.exports = {
       padding: "2rem",
       screens: {
         "2xl": "1400px",
-      },
+      }
     },
     extend: {
+      fontFamily: { 
+        "roboto_medium" : ["roboto-medium"],
+        "roboto_bold" : ["roboto-bold"]
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

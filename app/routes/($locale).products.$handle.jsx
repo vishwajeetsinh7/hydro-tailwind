@@ -61,7 +61,7 @@ export default function Product() {
   return (
     <>
     <PlanPicker/>
-    <div className='custom-collection'>
+    <div className='custom-collection-wrap'>
       <CustomCollection col={customCollectionProducts}/>
     </div>
     {/* <div className="product">
@@ -402,6 +402,7 @@ const PRODUCT_ITEM_FRAGMENT = `#graphql
     id
     handle
     title
+    description
     images(first: 100) {
       nodes {
         altText
@@ -453,6 +454,7 @@ const COLLECTION_QUERY = `#graphql
       handle
       title
       description
+      
       products(
         first: $first,
         last: $last,

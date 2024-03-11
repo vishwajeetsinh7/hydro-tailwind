@@ -111,7 +111,7 @@ export default function Product() {
   return (
     <>
     <PlanPicker/>
-    <div className='custom-collection'>
+    <div className='custom-collection-wrap'>
       <CustomCollection/>
     </div>
     {/* <div className="product">
